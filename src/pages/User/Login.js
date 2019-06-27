@@ -16,6 +16,7 @@ class LoginPage extends Component {
   state = {
     type: 'account',
     autoLogin: true,
+    active: {},
   };
 
   onTabChange = type => {
@@ -67,15 +68,20 @@ class LoginPage extends Component {
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
   );
 
+  syncActive = active => {
+    this.setState({ active });
+  };
+
   render() {
     const { login, submitting } = this.props;
-    const { type, autoLogin } = this.state;
+    const { type, autoLogin, active } = this.state;
     return (
       <div className={styles.main}>
         <Login
           defaultActiveKey={type}
           onTabChange={this.onTabChange}
           onSubmit={this.handleSubmit}
+          syncActive={this.syncActive}
           ref={form => {
             this.loginForm = form;
           }}
@@ -106,7 +112,8 @@ class LoginPage extends Component {
               ]}
               onPressEnter={e => {
                 e.preventDefault();
-                this.loginForm.validateFields(this.handleSubmit);
+                const activeFileds = active[type];
+                this.loginForm.validateFields(activeFileds, { force: true }, this.handleSubmit);
               }}
             />
           </Tab>
