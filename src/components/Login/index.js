@@ -42,7 +42,7 @@ class Login extends Component {
 
   getContext = () => {
     const { tabs } = this.state;
-    const { form } = this.props;
+    const { form, syncActive } = this.props;
     return {
       tabUtil: {
         addTab: id => {
@@ -66,9 +66,14 @@ class Login extends Component {
         } else {
           active[type] = [activeItem];
         }
-        this.setState({
-          active,
-        });
+        this.setState(
+          {
+            active,
+          },
+          () => {
+            syncActive(active);
+          }
+        );
       },
     };
   };
